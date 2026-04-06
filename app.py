@@ -2,8 +2,15 @@
 # Takes a threat actor or CVE as input and displays the final intelligence brief.
 
 import asyncio
+import os
 from concurrent.futures import ThreadPoolExecutor
 import streamlit as st
+
+# Bridge Streamlit secrets to environment variables so the Anthropic client
+# can find the API key on Streamlit Cloud (where .env files don't exist).
+if "ANTHROPIC_API_KEY" in st.secrets:
+    os.environ["ANTHROPIC_API_KEY"] = st.secrets["ANTHROPIC_API_KEY"]
+
 from agents.orchestrator import run as orchestrate
 
 st.set_page_config(
